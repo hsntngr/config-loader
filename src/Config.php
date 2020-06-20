@@ -46,7 +46,7 @@ class Config
      *
      * @return Config
      */
-    public function getInstance(): Config
+    public static function getInstance(): Config
     {
         return self::$instance;
     }

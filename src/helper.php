@@ -11,10 +11,10 @@ if (!function_exists("config")) {
      */
     function config(string $key = null, $value = null)
     {
-        $config = \Reactor\Components\Config\Config::getInstance();
+        $config = \Hsntngr\Config\Config::getInstance();
 
         if ($key && $value) {
-            return $config->add($key, $value);
+            return $config->set($key, $value);
         }
 
         if ($key) {
