@@ -1,0 +1,15 @@
+{
+    "name": "hsntngr/config-loader",
+    "description": "Load configuration files with ease",
+    "type": "library",
+    "autoload": {
+        "files": ["src/helper.php"],
+        "psr-4": {
+            "Hsntngr\\Config\\": "src/"
+        }
+    },
+    "require": {
+        "symfony/yaml": "^3.4"
+    },
+    "license": "MIT"
+}
