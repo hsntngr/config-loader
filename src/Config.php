@@ -20,38 +20,65 @@ class Config
      */
     protected $loader;
 
-    public function __construct(BaseLoader $loader)
+    /**
+     * Config constructor.
+     * @param BaseLoader $loader
+     */
+    public function __construct(BaseLoader $loader = null)
     {
         $this->loader = $loader;
     }
 
-    public static function create(BaseLoader $loader)
+    /**
+     * Creates Config instance
+     * @param BaseLoader $loader
+     * @return static
+     */
+    public static function create(BaseLoader $loader = null)
     {
-        if (self::$instance) {
-            return self::$instance;
-        } else {
-            self::$instance = new static($loader);
-
-            return self::$instance;
-        }
+        return self::$instance
+            ? self::$instance
+            : self::$instance = new static($loader);
     }
 
-    public function getInstance()
+    /**
+     * Retrieve Config instance
+     *
+     * @return Config
+     */
+    public function getInstance(): Config
     {
         return self::$instance;
     }
 
+    /**
+     * Set loader to load configuration files
+     *
+     * @param BaseLoader $loader
+     */
     public function setLoader(BaseLoader $loader)
     {
         $this->loader = $loader;
     }
 
+    /**
+     * Load configurations
+     *
+     * @param null $directory
+     * @throws Exceptions\DirectoryNotDefined
+     */
     public function load($directory = null)
     {
-       $this->configs = $this->loader->loadDir($directory);
+        $this->configs = $this->loader->loadDir($directory);
     }
 
-    public function loadFromFile($path): Config
+    /**
+     * Load configurations from single file
+     *
+     * @param $path
+     * @return Config
+     */
+    public function loadFromFile(string $path): Config
     {
         $filename = pathinfo($path, PATHINFO_FILENAME);
         $this->configs[$filename] = $this->loader->load($path);
@@ -59,7 +86,14 @@ class Config
         return $this;
     }
 
-    public function add($key, $value): bool
+    /**
+     * Set configuration at runtime
+     *
+     * @param string $key
+     * @param $value
+     * @return bool
+     */
+    public function set(string $key, $value): void
     {
         if ($this->hasDelimiter($key)) {
             $keys = explode(".", $key);
@@ -69,7 +103,7 @@ class Config
             foreach ($keys as $index => $_key) {
                 if ($index == (count($keys) - 1)) {
                     $config[$_key] = $value;
-                    return true;
+                    return;
                 }
 
                 if (array_key_exists($_key, $config)) {
@@ -82,10 +116,14 @@ class Config
         }
 
         $this->configs[$key] = $value;
-
-        return true;
     }
 
+    /**
+     * Get specific configuration
+     *
+     * @param $key
+     * @return mixed|void
+     */
     public function get($key)
     {
         # return if there is exact key
@@ -114,7 +152,7 @@ class Config
                 if (array_key_exists($_key, $array)) {
                     $array = $array[$_key];
                 } else {
-                    return null;
+                    return;
                 }
             } else {
                 return $array;
@@ -124,6 +162,12 @@ class Config
         return $array;
     }
 
+    /**
+     * Check if nested key
+     *
+     * @param $key
+     * @return bool
+     */
     protected function hasDelimiter($key)
     {
         return strpos($key, ".") !== false;

@@ -20,7 +20,7 @@ abstract class BaseLoader
     }
 
     /**
-     * Scans all files under the given directory
+     * Scans all files in the given directory
      * @param string $directory
      * @return array
      */
@@ -32,9 +32,9 @@ abstract class BaseLoader
 
     /**
      * @param $path
-     * @return array
+     * @return array|void
      */
-    abstract protected function getContent($path): array;
+    abstract protected function getContent($path);
 
 
     /**
